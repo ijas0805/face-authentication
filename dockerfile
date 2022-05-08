@@ -6,6 +6,7 @@ WORKDIR /code/
 RUN apt-get update
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 COPY . /code/
+RUN sudo apt install python3-pip
 RUN pip install -r requirements.txt
 EXPOSE 8000
 CMD ["python", "server.py"]

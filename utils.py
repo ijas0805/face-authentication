@@ -1,4 +1,4 @@
-from asyncio.log import logger
+from settings import logger
 from deepface import DeepFace
 import shutil
 import os

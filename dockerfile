@@ -3,10 +3,10 @@ FROM python:3.7
 # Set environment varibles
 WORKDIR /code/
 # Install dependencies
-RUN apt-get update
-RUN apt-get install ffmpeg libsm6 libxext6  -y
+RUN sudo apt-get update
+RUN sudo apt-get install ffmpeg libsm6 libxext6  -y
 COPY . /code/
-RUN sudo apt install python3-pip
+RUN sudo apt-get install python3-pip
 RUN pip install -r requirements.txt
 EXPOSE 8000
 CMD ["python", "server.py"]

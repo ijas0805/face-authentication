@@ -2,3 +2,4 @@ Pillow
 fastapi
 uvicorn
 deepface
+python-multipart

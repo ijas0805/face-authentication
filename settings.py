@@ -9,5 +9,9 @@ logger.setLevel(logging.DEBUG)
 
 ADD_USER_PASSWORD = "pass"
 USER_VERIFICATION_PASSWORD = "pass"
+PORT_NO = 8080
+HOST = '0.0.0.0'
 
 MAX_COSIN = 2.9
+
+

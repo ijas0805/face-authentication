@@ -41,3 +41,4 @@ def verifyuser(img, username):
 
 # img = Image.open('sample.jpg')
 # adduser(img, 'myname')
+

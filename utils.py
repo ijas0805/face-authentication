@@ -13,8 +13,9 @@ def adduser(img, username):
 
     if os.path.exists("db/img/db/representations_vgg_face.pkl"):
         os.remove("db/img/db/representations_vgg_face.pkl")
+        logger.info("Deleting db and creating new db") 
     else:
-        logger.info("The db does not exist") 
+        logger.info("The db does not exist creating new db") 
 
     # Create DB
     df = DeepFace.find(img_path = 'db/img/'+username+'.png', db_path = "db/img")
@@ -41,4 +42,3 @@ def verifyuser(img, username):
 
 # img = Image.open('sample.jpg')
 # adduser(img, 'myname')
-

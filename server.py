@@ -25,7 +25,7 @@ async def add_user(password: str, user_name: str, email: str, user_image: bytes 
             return resJson
     else:
         logger.error(f"WRONG password {password}")
-        return "WRONG password"
+        return {'result': 'WRONG password'}
 
 @app.post('/api/verify')
 async def verify_user(password: str, user_name: str, user_image: bytes = File(...)):
@@ -41,7 +41,7 @@ async def verify_user(password: str, user_name: str, user_image: bytes = File(..
             else:
                 result = 'User not verified'
                 logger.info(f'"{user_name}" not verified')
-            resJson = {'result': f'Msg: {result}'}
+            resJson = {'result': f'{result}'}
             return resJson
         except Exception as Error:
             logger.error(f'User not verified due to error: {Error}')
@@ -49,7 +49,7 @@ async def verify_user(password: str, user_name: str, user_image: bytes = File(..
             return resJson
     else:
         logger.error(f"WRONG password {password}")
-        return "WRONG password"
+        return {'result': 'WRONG password'}
 
 
 if __name__ == "__main__":

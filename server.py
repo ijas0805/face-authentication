@@ -9,7 +9,7 @@ from utils import adduser, verifyuser
 app = FastAPI()
 
 @app.post('/api/adduser')
-async def add_user(password: str, user_name: str, user_image: bytes = File(...)):
+async def add_user(password: str, user_name: str, email: str, user_image: bytes = File(...)):
     if password == settings.ADD_USER_PASSWORD:
         user_name = user_name
         user_image = Image.open(io.BytesIO(user_image))

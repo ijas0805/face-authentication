@@ -13,6 +13,7 @@ async def add_user(password: str, user_name: str, email: str, user_image: bytes 
     if password == settings.ADD_USER_PASSWORD:
         user_name = user_name
         user_image = Image.open(io.BytesIO(user_image))
+        if user_image == '': return {'result': 'Enter a username'}
         logger.info(f'Request to add "{user_name}"')
         try:
             adduser(user_image, user_name)
@@ -25,7 +26,7 @@ async def add_user(password: str, user_name: str, email: str, user_image: bytes 
             return resJson
     else:
         logger.error(f"WRONG password {password}")
-        return {'result': 'WRONG password'}
+        return {'result': 'Access denied'}
 
 @app.post('/api/verify')
 async def verify_user(password: str, user_name: str, user_image: bytes = File(...)):
@@ -36,10 +37,10 @@ async def verify_user(password: str, user_name: str, user_image: bytes = File(..
         try:
             user_from_db = verifyuser(user_image, user_name)
             if user_from_db:
-                result = 'User verified'
+                result = f"User '{user_name}' verified"
                 logger.info(f'"{user_name}" verified')
             else:
-                result = 'User not verified'
+                result = 'User not verified!!\nPlease try againe'
                 logger.info(f'"{user_name}" not verified')
             resJson = {'result': f'{result}'}
             return resJson
@@ -49,7 +50,7 @@ async def verify_user(password: str, user_name: str, user_image: bytes = File(..
             return resJson
     else:
         logger.error(f"WRONG password {password}")
-        return {'result': 'WRONG password'}
+        return {'result': 'Access denied'}
 
 
 if __name__ == "__main__":

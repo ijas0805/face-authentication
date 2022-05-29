@@ -1,0 +1,9 @@
+env/**
+
+*.png
+
+production.log
+
+*.pkl
+
+/__pycache__/**

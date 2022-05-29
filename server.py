@@ -4,6 +4,7 @@ from settings import logger
 from PIL import Image
 from fastapi import FastAPI, File
 import uvicorn
+import os
 from utils import adduser, verifyuser
 
 app = FastAPI()
@@ -16,13 +17,13 @@ async def add_user(password: str, user_name: str, email: str, user_image: bytes 
         if user_image == '': return {'result': 'Enter a username'}
         logger.info(f'Request to add "{user_name}"')
         try:
-            adduser(user_image, user_name)
-            logger.info(f'User "{user_name}" added')
-            resJson = {'result': f'User "{user_name}" added'}
+            result = adduser(user_image, user_name)
+            resJson = {'result': result}
             return resJson
         except Exception as Error:
             logger.error(f'User not added due to error: {Error}')
-            resJson = {'result': f'User not added due to error'}
+            os.remove(f"db/img/{user_name}.png")
+            resJson = {'result': f'Face not detected!!\nTry again'}
             return resJson
     else:
         logger.error(f"WRONG password {password}")

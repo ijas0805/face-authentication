@@ -3,6 +3,7 @@ from deepface import DeepFace
 import shutil
 import os
 import settings
+from hand_postures import hand_pose_verify
 
 def adduser(img, username):
     if os.path.exists(f"db/img/{username}.png"):
@@ -31,7 +32,11 @@ def adduser(img, username):
         logger.error(f'representations_vgg_face not created. User "{username}" not added')
         return f'User "{username}" not added\nPlease try again'
 
-def verifyuser(img, username):
+def verifyuser(img, username, finger_count):
+
+    if not hand_pose_verify(img, finger_count):
+        logger.info(f"User '{username}' hand pose not verified")
+        return 'Plese correct your hand pose'
 
     img.save('call/img/'+username+'.png')
     df = DeepFace.find(img_path = 'call/img/'+username+'.png', db_path = "db/img/db", enforce_detection = False)
@@ -42,11 +47,13 @@ def verifyuser(img, username):
             image_cosine = float(df['VGG-Face_cosine'][i])
             if userpath == 'db/img/'+username+'.png' and image_cosine<settings.MAX_COSIN:
                 logger.info(f'Matched user "{userpath}"')
-                return True
+                return f"User '{username}' verified"
     except:
         logger.info(f'No user matched for "{username}"')
-        return False
-    return False
+        logger.info(f'"{username}" not verified')
+        return 'User not verified!!\nPlease try againe'
+    logger.info(f'"{username}" not verified')
+    return 'User not verified!!\nPlease try againe'
 
 # img = Image.open('sample.jpg')
 # adduser(img, 'myname')

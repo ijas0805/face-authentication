@@ -30,19 +30,14 @@ async def add_user(password: str, user_name: str, email: str, user_image: bytes 
         return {'result': 'Access denied'}
 
 @app.post('/api/verify')
-async def verify_user(password: str, user_name: str, user_image: bytes = File(...)):
+async def verify_user(password: str, user_name: str, finger_count: str, user_image: bytes = File(...)):
     if password == settings.USER_VERIFICATION_PASSWORD:
         user_name = user_name
+        finger_count = int(finger_count)
         user_image = Image.open(io.BytesIO(user_image))
         logger.info(f'Request to verify "{user_name}"')
         try:
-            user_from_db = verifyuser(user_image, user_name)
-            if user_from_db:
-                result = f"User '{user_name}' verified"
-                logger.info(f'"{user_name}" verified')
-            else:
-                result = 'User not verified!!\nPlease try againe'
-                logger.info(f'"{user_name}" not verified')
+            result = verifyuser(user_image, user_name, finger_count)
             resJson = {'result': f'{result}'}
             return resJson
         except Exception as Error:

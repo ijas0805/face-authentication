@@ -28,6 +28,7 @@ def hand_pose_verify(image, goal_count):
       model_complexity=0,
       min_detection_confidence=0.5,
       min_tracking_confidence=0.5) as hands:
+      image = np.array(image)
       image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
       image = cv2.flip(image, 1)
       results = hands.process(image)
@@ -50,21 +51,22 @@ def hand_pose_verify(image, goal_count):
           PINKY_MCP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].y, 2)]
           PINKY_PIP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_PIP].y, 2)]
           PINKY_DIP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_DIP].y, 2)]
-          THUMB_TIP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y, 2)]
-          THUMB_IP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].y, 2)]
-          THUMB_MCP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].y, 2)]
+          # THUMB_TIP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y, 2)]
+          # THUMB_IP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_IP].y, 2)]
+          # THUMB_MCP = [round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].x, 2),round(hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].y, 2)]
+
           
-          count = 0
-          if pose_angle_verifier(calculate_angle(INDEX_FINGER_MCP, INDEX_FINGER_PIP, INDEX_FINGER_DIP), 180, 150):
-            count += 1
-          if pose_angle_verifier(calculate_angle(MIDDLE_FINGER_MCP, MIDDLE_FINGER_PIP, MIDDLE_FINGER_DIP), 180, 150):
-            count += 1
-          if pose_angle_verifier(calculate_angle(RING_FINGER_MCP, RING_FINGER_PIP, RING_FINGER_DIP), 180, 150):
-            count += 1
-          if pose_angle_verifier(calculate_angle(PINKY_MCP, PINKY_PIP, PINKY_DIP), 180, 150):
-            count += 1
-          if pose_angle_verifier(calculate_angle(THUMB_TIP, THUMB_IP, THUMB_MCP), 180, 170):
-            count += 1
+          def point_finger_pointed():  
+            if pose_angle_verifier(calculate_angle(INDEX_FINGER_MCP, INDEX_FINGER_PIP, INDEX_FINGER_DIP), 180, 150):
+              if pose_angle_verifier(calculate_angle(MIDDLE_FINGER_MCP, MIDDLE_FINGER_PIP, MIDDLE_FINGER_DIP), 180, 150):
+                return "wrong finger pose"
+              if pose_angle_verifier(calculate_angle(RING_FINGER_MCP, RING_FINGER_PIP, RING_FINGER_DIP), 180, 150):
+                return "wrong finger pose"
+              if pose_angle_verifier(calculate_angle(PINKY_MCP, PINKY_PIP, PINKY_DIP), 180, 150):
+                return "wrong finger pose"
+              # if pose_angle_verifier(calculate_angle(THUMB_TIP, THUMB_IP, THUMB_MCP), 180, 170):
+              #   return "wrong finger pose"
+              return True
 
           # mp_drawing.draw_landmarks(
           #     image,
@@ -72,10 +74,9 @@ def hand_pose_verify(image, goal_count):
           #     mp_hands.HAND_CONNECTIONS,
           #     mp_drawing_styles.get_default_hand_landmarks_style(),
           #     mp_drawing_styles.get_default_hand_connections_style())
-        # msg = f'count is : {count} '
-        if goal_count == count:
-          return True
-        return False
+          
+        
+      else: return "Hand not detected"
       #   cv2.putText(image, msg, 
       #                   (50, 100), 
       #                   cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 3, cv2.LINE_AA)

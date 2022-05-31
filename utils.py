@@ -34,9 +34,10 @@ def adduser(img, username):
 
 def verifyuser(img, username, finger_count):
 
-    if not hand_pose_verify(img, finger_count):
+    pose_result = hand_pose_verify(img, finger_count)
+    if not pose_result == True :
         logger.info(f"User '{username}' hand pose not verified")
-        return 'Plese correct your hand pose'
+        return pose_result
 
     img.save('call/img/'+username+'.png')
     df = DeepFace.find(img_path = 'call/img/'+username+'.png', db_path = "db/img/db", enforce_detection = False)
